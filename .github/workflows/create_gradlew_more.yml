@@ -1,0 +1,43 @@
+name: Add Gradle Wrapper
+
+on:
+  push:
+    branches: [ "main", "1.16.5test" ] # 対象ブランチを指定
+  workflow_dispatch:
+
+jobs:
+  add-gradlew:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }} # プッシュされたブランチを動的に取得
+
+      # Java 17 をセットアップ（LWJGL 3 や最新ビルドに対応）
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # Gradle 8.5 をセットアップ
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.5'
+
+      # 指定したバージョンの Wrapper を生成
+      - name: Generate Gradle Wrapper
+        run: |
+          gradle wrapper --gradle-version 8.5
+
+      # 生成された Wrapper ファイル群をコミット＆プッシュ
+      - name: Commit and push Gradle Wrapper
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add gradlew gradlew.bat gradle/wrapper/gradle-wrapper.jar gradle/wrapper/gradle-wrapper.properties
+          git commit -m "Add Gradle Wrapper files (via GitHub Actions)" || echo "No changes to commit"
+          git push
