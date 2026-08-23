@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+// 使用するLWJGLとJOMLのバージョン
+ext {
+    lwjglCoreVersion = "3.3.3"
+    jomlVersion = "1.10.5"
+}
+
+dependencies {
+    // JOML (数学ライブラリ)
+    implementation "org.joml:joml:${jomlVersion}"
+
+    // LWJGL Core & モジュール
+    implementation "org.lwjgl:lwjgl:${lwjglCoreVersion}"
+    implementation "org.lwjgl:lwjgl-glfw:${lwjglCoreVersion}"
+    implementation "org.lwjgl:lwjgl-opengl:${lwjglCoreVersion}"
+    implementation "org.lwjgl:lwjgl-stb:${lwjglCoreVersion}" // 画像読み込み用(STB)
+
+    // LWJGL Native (実行環境用バイナリ)
+    // ※環境に合わせて natives-desktop や各OS用が取得されます
+    runtimeOnly "org.lwjgl:lwjgl::natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-stb::natives-linux"
+}
+
+// メインの実行クラスの指定
+application {
+    mainClass = 'nisekula.Main'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
