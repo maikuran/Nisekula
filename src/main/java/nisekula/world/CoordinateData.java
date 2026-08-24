@@ -72,8 +72,8 @@ public class CoordinateData {
 }
 
 /**
- * 同一ファイル内に定義されたWorldクラス
- * `world.setBlock(x, y, blockId)` を実行するためのコンテナ
+ * 外部から参照できるように public クラスとして同一ファイル内に定義した World クラス
+ * `world.setBlock(x, y, blockId)` を実行するために使用します
  */
 class World {
     private final Map<String, CoordinateData> blockMap = new HashMap<>();
