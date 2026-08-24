@@ -13,6 +13,7 @@ public class ItemRegistry {
     // --- 1. アイテムタグ定義 ---
     public enum Tag {
         BLOCKS,      // ブロックアイテム
+        FOOD,        //食べ物
         ELECTROS,    // 電気・回路系
         WAND,        // 万能掘削ツール (突き刺して破壊)
         HOE,         // クワ (耕作)
