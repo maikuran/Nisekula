@@ -31,7 +31,10 @@ public class WoodFeature {
         // 【小型の木】リンゴの木
         FeatureRegistry.r(101, "apple_tree",
             new FeatureRegistry.Properties().ch(0.05f).height(60, 120).size(4),
-            (world, x, y) -> {
+            (worldObj, x, y) -> {
+                if (!(worldObj instanceof World)) return;
+                World world = (World) worldObj;
+
                 // 幹 (高さ 3 ブロック)
                 for (int dy = 0; dy < 3; dy++) {
                     world.setBlock(x, y + dy, Blocks.APPLE_LOG);
@@ -46,7 +49,10 @@ public class WoodFeature {
         // 【小型の木】ミカンの木
         FeatureRegistry.r(102, "mandarin_tree",
             new FeatureRegistry.Properties().ch(0.05f).height(60, 120).size(4),
-            (world, x, y) -> {
+            (worldObj, x, y) -> {
+                if (!(worldObj instanceof World)) return;
+                World world = (World) worldObj;
+
                 // 幹 (高さ 3 ブロック)
                 for (int dy = 0; dy < 3; dy++) {
                     world.setBlock(x, y + dy, Blocks.MANDARIN_LOG);
@@ -61,7 +67,10 @@ public class WoodFeature {
         // 【大型の木】ケヤキの木
         FeatureRegistry.r(103, "zelkova_tree",
             new FeatureRegistry.Properties().ch(0.02f).height(60, 130).size(8),
-            (world, x, y) -> {
+            (worldObj, x, y) -> {
+                if (!(worldObj instanceof World)) return;
+                World world = (World) worldObj;
+
                 // 幹 (高さ 6 ブロック、2Dなので太さは横への広がりとして表現)
                 for (int dy = 0; dy < 6; dy++) {
                     world.setBlock(x, y + dy, Blocks.ZELKOVA_LOG);
@@ -78,7 +87,10 @@ public class WoodFeature {
         // 【大型の木】レッドウッドの木
         FeatureRegistry.r(104, "redwood_tree",
             new FeatureRegistry.Properties().ch(0.02f).height(60, 140).size(10),
-            (world, x, y) -> {
+            (worldObj, x, y) -> {
+                if (!(worldObj instanceof World)) return;
+                World world = (World) worldObj;
+
                 // 幹 (高さ 8 ブロック)
                 for (int dy = 0; dy < 8; dy++) {
                     world.setBlock(x, y + dy, Blocks.REDWOOD_LOG);
