@@ -91,9 +91,4 @@ public class WoodFeature {
             }
         );
     }
-}                }
-                world.setBlock(x, y + 9, z, Blocks.REDWOOD_LEAVES); // 頂点
-            }
-        );
-    }
 }
