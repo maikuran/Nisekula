@@ -12,7 +12,6 @@ public class WoodFeature {
      */
     public static void init() {
         // --- 1. 原木(Log)のブロック破壊時ドロップ設定 ---
-        // どの原木を壊しても対応する原木アイテム/ブロックが確実にドロップするように登録
         LootSystem.registerBlockLoot(Blocks.APPLE_LOG, Arrays.asList(
             new LootSystem.LootEntry(Blocks.APPLE_LOG, 1.0f, 1, 1)
         ));
@@ -26,66 +25,78 @@ public class WoodFeature {
             new LootSystem.LootEntry(Blocks.MANDARIN_LOG, 1.0f, 1, 1)
         ));
 
-        // --- 2. FeatureRegistry を使った木の生成ロジック登録 ---
+        // --- 2. FeatureRegistry の `r` メソッドを使った木の生成ロジック登録 ---
 
-        // 【小型の木】リンゴの木 (コンパクトな高さと葉の広がり)
-        FeatureRegistry.registerFeature("apple_tree", (world, x, y, z) -> {
-            // 幹 (高さ 3〜4 ブロック)
-            for (int dy = 0; dy < 3; dy++) {
-                world.setBlock(x, y + dy, z, Blocks.APPLE_LOG);
+        // 【小型の木】リンゴの木
+        FeatureRegistry.r(101, "apple_tree",
+            new FeatureRegistry.Properties().ch(0.05f).height(60, 120).size(4),
+            (world, x, y) -> {
+                // 幹 (高さ 3 ブロック)
+                for (int dy = 0; dy < 3; dy++) {
+                    world.setBlock(x, y + dy, z, Blocks.APPLE_LOG); // ※worldの実装に応じてz座標の扱いを調整してください
+                }
+                // 葉 (上部に小さく配置)
+                world.setBlock(x, y + 3, z, Blocks.APPLE_LEAVES);
+                world.setBlock(x + 1, y + 2, z, Blocks.APPLE_LEAVES);
+                world.setBlock(x - 1, y + 2, z, Blocks.APPLE_LEAVES);
+                world.setBlock(x, y + 2, z + 1, Blocks.APPLE_LEAVES);
+                world.setBlock(x, y + 2, z - 1, Blocks.APPLE_LEAVES);
             }
-            // 葉 (上部に小さく配置)
-            world.setBlock(x, y + 3, z, Blocks.APPLE_LEAVES);
-            world.setBlock(x + 1, y + 2, z, Blocks.APPLE_LEAVES);
-            world.setBlock(x - 1, y + 2, z, Blocks.APPLE_LEAVES);
-            world.setBlock(x, y + 2, z + 1, Blocks.APPLE_LEAVES);
-            world.setBlock(x, y + 2, z - 1, Blocks.APPLE_LEAVES);
-        });
+        );
 
-        // 【小型の木】ミカンの木 (リンゴ同様にコンパクト)
-        FeatureRegistry.registerFeature("mandarin_tree", (world, x, y, z) -> {
-            // 幹 (高さ 3 ブロック)
-            for (int dy = 0; dy < 3; dy++) {
-                world.setBlock(x, y + dy, z, Blocks.MANDARIN_LOG);
+        // 【小型の木】ミカンの木
+        FeatureRegistry.r(102, "mandarin_tree",
+            new FeatureRegistry.Properties().ch(0.05f).height(60, 120).size(4),
+            (world, x, y) -> {
+                // 幹 (高さ 3 ブロック)
+                for (int dy = 0; dy < 3; dy++) {
+                    world.setBlock(x, y + dy, z, Blocks.MANDARIN_LOG);
+                }
+                // 葉 (上部に小さく配置)
+                world.setBlock(x, y + 3, z, Blocks.MANDARIN_LEAVES);
+                world.setBlock(x + 1, y + 2, z, Blocks.MANDARIN_LEAVES);
+                world.setBlock(x - 1, y + 2, z, Blocks.MANDARIN_LEAVES);
+                world.setBlock(x, y + 2, z + 1, Blocks.MANDARIN_LEAVES);
+                world.setBlock(x, y + 2, z - 1, Blocks.MANDARIN_LEAVES);
             }
-            // 葉 (上部に小さく配置)
-            world.setBlock(x, y + 3, z, Blocks.MANDARIN_LEAVES);
-            world.setBlock(x + 1, y + 2, z, Blocks.MANDARIN_LEAVES);
-            world.setBlock(x - 1, y + 2, z, Blocks.MANDARIN_LEAVES);
-            world.setBlock(x, y + 2, z + 1, Blocks.MANDARIN_LEAVES);
-            world.setBlock(x, y + 2, z - 1, Blocks.MANDARIN_LEAVES);
-        });
+        );
 
-        // 【大型の木】ケヤキの木 (太く高くそびえ立つ)
-        FeatureRegistry.registerFeature("zelkova_tree", (world, x, y, z) -> {
-            // 幹 (高さ 6 ブロック、太さ2x2を想定した中心柱)
-            for (int dy = 0; dy < 6; dy++) {
-                world.setBlock(x, y + dy, z, Blocks.ZELKOVA_LOG);
-                world.setBlock(x + 1, y + dy, z, Blocks.ZELKOVA_LOG);
-            }
-            // 葉 (ダイナミックに広く展開)
-            for (int dx = -2; dx <= 3; dx++) {
-                for (int dz = -2; dz <= 2; dz++) {
-                    world.setBlock(x + dx, y + 5, z + dz, Blocks.ZELKOVA_LEAVES);
-                    world.setBlock(x + dx, y + 6, z + dz, Blocks.ZELKOVA_LEAVES);
+        // 【大型の木】ケヤキの木
+        FeatureRegistry.r(103, "zelkova_tree",
+            new FeatureRegistry.Properties().ch(0.02f).height(60, 130).size(8),
+            (world, x, y) -> {
+                // 幹 (高さ 6 ブロック、太さ2x2)
+                for (int dy = 0; dy < 6; dy++) {
+                    world.setBlock(x, y + dy, z, Blocks.ZELKOVA_LOG);
+                    world.setBlock(x + 1, y + dy, z, Blocks.ZELKOVA_LOG);
+                }
+                // 葉 (ダイナミックに広く展開)
+                for (int dx = -2; dx <= 3; dx++) {
+                    for (int dz = -2; dz <= 2; dz++) {
+                        world.setBlock(x + dx, y + 5, z + dz, Blocks.ZELKOVA_LEAVES);
+                        world.setBlock(x + dx, y + 6, z + dz, Blocks.ZELKOVA_LEAVES);
+                    }
                 }
             }
-        });
+        );
 
-        // 【大型の木】レッドウッドの木 (さらに超高層な木)
-        FeatureRegistry.registerFeature("redwood_tree", (world, x, y, z) -> {
-            // 幹 (高さ 8 ブロック)
-            for (int dy = 0; dy < 8; dy++) {
-                world.setBlock(x, y + dy, z, Blocks.REDWOOD_LOG);
+        // 【大型の木】レッドウッドの木
+        FeatureRegistry.r(104, "redwood_tree",
+            new FeatureRegistry.Properties().ch(0.02f).height(60, 140).size(10),
+            (world, x, y) -> {
+                // 幹 (高さ 8 ブロック)
+                for (int dy = 0; dy < 8; dy++) {
+                    world.setBlock(x, y + dy, z, Blocks.REDWOOD_LOG);
+                }
+                // 葉 (円錐状に何層にもわたって配置)
+                for (int h = 5; h <= 8; h++) {
+                    world.setBlock(x + 1, y + h, z, Blocks.REDWOOD_LEAVES);
+                    world.setBlock(x - 1, y + h, z, Blocks.REDWOOD_LEAVES);
+                    world.setBlock(x, y + h, z + 1, Blocks.REDWOOD_LEAVES);
+                    world.setBlock(x, y + h, z - 1, Blocks.REDWOOD_LEAVES);
+                }
+                world.setBlock(x, y + 9, z, Blocks.REDWOOD_LEAVES); // 頂点
             }
-            // 葉 (円錐状に何層にもわたって配置)
-            for (int h = 5; h <= 8; h++) {
-                world.setBlock(x + 1, y + h, z, Blocks.REDWOOD_LEAVES);
-                world.setBlock(x - 1, y + h, z, Blocks.REDWOOD_LEAVES);
-                world.setBlock(x, y + h, z + 1, Blocks.REDWOOD_LEAVES);
-                world.setBlock(x, y + h, z - 1, Blocks.REDWOOD_LEAVES);
-            }
-            world.setBlock(x, y + 9, z, Blocks.REDWOOD_LEAVES); // 頂点
-        });
+        );
     }
 }
