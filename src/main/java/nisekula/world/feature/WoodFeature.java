@@ -2,6 +2,7 @@ package nisekula.world.feature;
 
 import nisekula.lib.regi.FeatureRegistry;
 import nisekula.world.block.Blocks;
+import nisekula.world.World;
 import nisekula.world.loot.LootSystem;
 import java.util.Arrays;
 
