@@ -5,12 +5,12 @@ public class MathLib {
     // ==========================================
     // 定数（ショートカット）
     // ==========================================
-    public static final float PI = (float) Math.PI;         // 円周率 π
+    public static final float PI = (float) Math.PI;           // 円周率 π
     public static final float PI2 = (float) (Math.PI * 2);  // 2π (360度)
     public static final float PI_2 = (float) (Math.PI / 2); // π/2 (90度)
-    public static final float E = (float) Math.E;           // ネイピア数 e
-    public static final float DEG2RAD = PI / 180.0f;       // 度 → ラジアン変換
-    public static final float RAD2DEG = 180.0f / PI;       // ラジアン → 度変換
+    public static final float E = (float) Math.E;             // ネイピア数 e
+    public static final float DEG2RAD = PI / 180.0f;        // 度 → ラジアン変換
+    public static final float RAD2DEG = 180.0f / PI;        // ラジアン → 度変換
 
     // ==========================================
     // 四則演算・基本操作
@@ -37,7 +37,7 @@ public class MathLib {
     // ==========================================
     public static float sq(float a) { return (float) Math.sqrt(a); }     // 平方根 (√a)
     public static double sq(double a) { return Math.sqrt(a); }
-    public static float pow2(float a) { return a * a; }                   // 2乗
+    public static float pow2(float a) { return a * a; }                    // 2乗
     public static float pow(float a, float b) { return (float) Math.pow(a, b); } // a^b
     
     public static float exp(float a) { return (float) Math.exp(a); }     // e^a (ネイピア数の冪乗)
@@ -96,7 +96,7 @@ public class MathLib {
     }
 
     /** min ~ max のランダム (int) */
-    public static int rnd(int min, int max) {
+    public static float rnd(int min, int max) {
         return min + (int) (Math.random() * ((max - min) + 1));
     }
 
@@ -122,5 +122,51 @@ public class MathLib {
     public static boolean aabb(float x1, float y1, float w1, float h1,
                                float x2, float y2, float w2, float h2) {
         return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
+    }
+
+    // ==========================================
+    // ワージェン・地形生成便利関数 (Worldgen Utilities)
+    // ==========================================
+
+    /**
+     * 指定した頻度と振幅でうねりを生み出すシンプルな波関数 (地形の高さ計算などに使用)
+     * @param x 入力X座標
+     * @param frequency 周波数（うねりの細かさ）
+     * @param amplitude 振幅（うねりの高さ・深さ）
+     * @return 計算された変位値
+     */
+    public static float simpleWave(float x, float frequency, float amplitude) {
+        return sin(x * frequency) * amplitude;
+    }
+
+    /**
+     * 複数オクターブの波を重ね合わせてより自然な地形のうねりを作る関数
+     * @param x 入力X座標
+     * @return 重ね合わされたノイズ風の高さ変位
+     */
+    public static float layeredWave(float x) {
+        float total = 0.0f;
+        total += simpleWave(x, 0.01f, 25.0f); // 大まかな地形のうねり
+        total += simpleWave(x, 0.05f, 8.0f);  // 中程度の起伏
+        total += simpleWave(x, 0.2f,  2.0f);  // 細かな凹凸
+        return total;
+    }
+
+    /**
+     * スムーズステップ関数 (バイオームの境界ブレンドや滑らかな遷移用)
+     */
+    public static float smoothStep(float edge0, float edge1, float x) {
+        float t = clp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
+        return t * t * (3.0f - 2.0f * t);
+    }
+
+    /**
+     * 簡易疑似乱数ハッシュ（座標Xから決定的に値を生成する。シード値固定の地形生成に便利）
+     */
+    public static float pseudoNoise(int x) {
+        int n = x;
+        n = (n << 13) ^ n;
+        int nn = (n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff;
+        return 1.0f - ((float) nn / 1073741824.0f);
     }
 }
