@@ -28,19 +28,10 @@ public class FoodItem {
      * 食料アイテムを一括登録する処理
      */
     public static void init() {
-        // ムカデ肉: 回復量 2.0 (生肉なので控えめ、あるいは毒リスクなどの拡張用)
         r(CENTIPEDE_MEAT, "centipede_meat", new FoodProperties(2.0f, false));
-
-        // リンゴ: 回復量 4.0
         r(APPLE, "apple", new FoodProperties(4.0f, false));
-
-        // ミカン: 回復量 3.0
         r(ORANGE, "orange", new FoodProperties(3.0f, false));
-
-        // ミカンジュース: 回復量 5.0 (素早く回復する飲み物)
         r(ORANGE_JUICE, "orange_juice", new FoodProperties(5.0f, true));
-
-        // リンゴジュース: 回復量 6.0
         r(APPLE_JUICE, "apple_juice", new FoodProperties(6.0f, true));
     }
 
@@ -48,9 +39,10 @@ public class FoodItem {
      * エンティティが食料を消費してHPを回復するシステム処理
      * @param entity 対象のエンティティ (プレイヤーやモブ)
      * @param itemId 食べたアイテムのID
+     * @param maxHp エンティティの最大HP（プレイヤーなら20.0fなど）
      * @return 消費・回復に成功したら true
      */
-    public static boolean consumeFood(EntityData entity, int itemId) {
+    public static boolean consumeFood(EntityData entity, int itemId, float maxHp) {
         if (entity == null || entity.isDead) return false;
 
         ItemRegistry.ItemType itemType = ItemRegistry.g(itemId);
@@ -61,9 +53,9 @@ public class FoodItem {
         FoodProperties food = (FoodProperties) itemType.props;
 
         // HP回復処理 (最大HPを超えないように回復)
-        float newHp = Math.min(entity.maxHp, entity.hp + food.healAmount);
-        if (newHp > entity.hp) {
-            entity.hp = newHp;
+        float newHp = Math.min(maxHp, entity.currentHp + food.healAmount);
+        if (newHp > entity.currentHp) {
+            entity.currentHp = newHp;
             return true; // 回復成功
         }
 
