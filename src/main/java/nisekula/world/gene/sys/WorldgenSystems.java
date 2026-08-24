@@ -9,9 +9,21 @@ public class WorldgenSystems {
     public static class BiomeType {
         public final int id;
         public final String name;
+        public final float paramA; // 追加パラメータ（湿度や温度、あるいは独自設定用）
+        public final float paramB;
+
         public BiomeType(int id, String name) {
             this.id = id;
             this.name = name;
+            this.paramA = 0.0f;
+            this.paramB = 0.0f;
+        }
+
+        public BiomeType(int id, String name, float paramA, float paramB) {
+            this.id = id;
+            this.name = name;
+            this.paramA = paramA;
+            this.paramB = paramB;
         }
     }
 
@@ -31,9 +43,22 @@ public class WorldgenSystems {
     private static final Map<Integer, BiomeType> BIOMES = new HashMap<>();
     private static final Map<Integer, DimensionType> DIMENSIONS = new HashMap<>();
 
-    // --- 3. バイオームのレジストリ関数 (登録はここでは空、あるいは外部から追加可能に) ---
+    // --- 3. バイオームのレジストリ関数 (オーバーロード対応) ---
     public static BiomeType registerBiome(int id, String name) {
         BiomeType biome = new BiomeType(id, name);
+        BIOMES.put(id, biome);
+        return biome;
+    }
+
+    public static BiomeType registerBiome(int id, String name, float paramA, float paramB) {
+        BiomeType biome = new BiomeType(id, name, paramA, paramB);
+        BIOMES.put(id, biome);
+        return biome;
+    }
+
+    // ForestBiomeなどで使われている 3引数や4引数に対応するオーバーロード
+    public static BiomeType registerBiome(int id, String name, int a, int b, int c) {
+        BiomeType biome = new BiomeType(id, name, (float)a, (float)b);
         BIOMES.put(id, biome);
         return biome;
     }
@@ -51,7 +76,7 @@ public class WorldgenSystems {
 
     /**
      * ワールド生成システムの初期化
-     * ディメンションの登録を行います（バイオームはこの時点では未登録）
+     * ディメンションの登録を行います
      */
     public static void init() {
         // ディメンションの登録
