@@ -2,6 +2,7 @@ package nisekula.world.feature;
 
 import nisekula.lib.regi.FeatureRegistry;
 import nisekula.world.WorldData;
+import nisekula.world.World;
 import nisekula.world.block.Blocks;
 
 import java.util.Random;
