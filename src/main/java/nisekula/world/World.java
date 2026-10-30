@@ -1,3 +1,8 @@
+package nisekula.world;
+
+import nisekula.world.block.Blocks;
+import java.util.HashMap;
+import java.util.Map;
 public class World {
     private final Map<String, CoordinateData> blockMap = new HashMap<>();
 
